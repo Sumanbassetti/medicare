@@ -1,0 +1,222 @@
+{
+  "doctors": [
+    {
+      "id": 1,
+      "name": "Dr. Sarah Johnson",
+      "specialty": "Cardiologist",
+      "image": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=300&h=300&fit=crop&crop=face",
+      "experience": "15 years",
+      "rating": 4.8,
+      "consultationFee": 150
+    },
+    {
+      "id": 2,
+      "name": "Dr. Michael Chen",
+      "specialty": "Dermatologist",
+      "image": "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=300&h=300&fit=crop&crop=face",
+      "experience": "12 years",
+      "rating": 4.9,
+      "consultationFee": 120
+    },
+    {
+      "id": 3,
+      "name": "Dr. Emily Rodriguez",
+      "specialty": "Pediatrician",
+      "image": "https://img.freepik.com/free-photo/medium-shot-smiley-doctor-with-coat_23-2148814212.jpg?semt=ais_hybrid&w=740",
+      "experience": "10 years",
+      "rating": 4.7,
+      "consultationFee": 100
+    },
+    {
+      "id": 4,
+      "name": "Dr. David Wilson",
+      "specialty": "Orthopedic Surgeon",
+      "image": "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=300&h=300&fit=crop&crop=face",
+      "experience": "18 years",
+      "rating": 4.6,
+      "consultationFee": 200
+    }
+  ],
+  "appointments": [
+    {
+      "email": "test11@yopmail.com",
+      "phone": "7894546123",
+      "date": "2025-06-24T18:30:00.000Z",
+      "startTime": "10:00 AM",
+      "endTime": "10:30 AM",
+      "doctorId": 2,
+      "patientName": "test test",
+      "status": "confirmed",
+      "createdAt": "2025-06-24T03:55:36.367Z",
+      "id": 1
+    },
+    {
+      "email": "abcd@gmail.com",
+      "phone": "7894546123",
+      "date": "2025-06-24T18:30:00.000Z",
+      "startTime": "10:30 AM",
+      "endTime": "11:00 AM",
+      "doctorId": 2,
+      "patientName": "test Ghosh",
+      "status": "confirmed",
+      "createdAt": "2025-06-24T03:56:49.685Z",
+      "id": 2
+    },
+    {
+      "email": "johndoe@example.com",
+      "phone": "9876543210",
+      "date": "2025-06-24T18:30:00.000Z",
+      "startTime": "11:30 AM",
+      "endTime": "12:00 PM",
+      "doctorId": 2,
+      "patientName": "John Doe",
+      "status": "confirmed",
+      "createdAt": "2025-06-24T04:10:00.000Z",
+      "id": 3
+    },
+    {
+      "email": "janesmith@example.com",
+      "phone": "9123456789",
+      "date": "2025-06-24T18:30:00.000Z",
+      "startTime": "12:30 PM",
+      "endTime": "1:00 PM",
+      "doctorId": 2,
+      "patientName": "Jane Smith",
+      "status": "pending",
+      "createdAt": "2025-06-24T05:20:00.000Z",
+      "id": 4
+    },
+    {
+      "email": "rohan.kumar@example.com",
+      "phone": "9012345678",
+      "date": "2025-06-24T18:30:00.000Z",
+      "startTime": "01:30 PM",
+      "endTime": "02:00 PM",
+      "doctorId": 2,
+      "patientName": "Rohan Kumar",
+      "status": "confirmed",
+      "createdAt": "2025-06-24T06:30:00.000Z",
+      "id": 5
+    },
+    {
+      "email": "aahad@gmail.com",
+      "phone": "7458961230",
+      "date": "2025-06-30T18:30:00.000Z",
+      "startTime": "09:00 AM",
+      "endTime": "10:30 AM",
+      "doctorId": 3,
+      "patientName": "test Ghosh",
+      "status": "confirmed",
+      "createdAt": "2025-06-24T04:10:15.780Z",
+      "id": 6
+    },
+    {
+      "email": "anirudha.dey1@test-group.com",
+      "phone": "7894546123",
+      "date": "2025-06-25T04:49:49.935Z",
+      "startTime": "12:00 AM",
+      "endTime": "12:30 AM",
+      "doctorId": 2,
+      "patientName": "test Ghosh",
+      "status": "confirmed",
+      "createdAt": "2025-06-24T04:50:02.358Z",
+      "id": 7
+    },
+    {
+      "email": "om@gmail.com",
+      "phone": "7894546123",
+      "date": "2025-06-25T05:07:54.730Z",
+      "startTime": "12:00 AM",
+      "endTime": "12:30 AM",
+      "doctorId": 2,
+      "patientName": "sdfgdfg fg",
+      "status": 0,
+      "createdAt": "2025-06-24T05:08:02.825Z",
+      "id": 8
+    },
+    {
+      "email": "om@gmail.com",
+      "phone": "7894546123",
+      "date": "2025-06-25T05:32:02.194Z",
+      "startTime": "11:00 AM",
+      "endTime": "11:30 AM",
+      "doctorId": 4,
+      "patientName": "test Ghosh",
+      "status": 0,
+      "createdAt": "2025-06-24T05:32:14.944Z",
+      "id": 9
+    },
+    {
+      "email": "gsoe.admin@gmail.com",
+      "phone": "7894546123",
+      "date": "2025-06-25T18:30:00.000Z",
+      "startTime": "12:00 AM",
+      "endTime": "12:30 AM",
+      "doctorId": 4,
+      "patientName": "rgr Ghosh",
+      "status": 0,
+      "createdAt": "2025-06-24T05:32:38.934Z",
+      "id": 10
+    },
+    {
+      "email": "pallab@gmail.com",
+      "phone": "7894546123",
+      "date": "2025-06-26T18:30:00.000Z",
+      "startTime": "11:00 AM",
+      "endTime": "11:30 AM",
+      "doctorId": 4,
+      "patientName": "test User",
+      "status": 0,
+      "createdAt": "2025-06-24T05:35:26.021Z",
+      "id": 11
+    },
+    {
+      "email": "pallab@gmail.com",
+      "phone": "7894546123",
+      "date": "2025-06-24T18:30:00.000Z",
+      "startTime": "12:00 AM",
+      "endTime": "12:30 AM",
+      "doctorId": 4,
+      "patientName": "test Ghosh",
+      "status": 0,
+      "createdAt": "2025-06-24T05:38:14.056Z",
+      "id": 12
+    },
+    {
+      "email": "aahad@gmail.com",
+      "phone": "7458961230",
+      "date": "2025-06-24T18:30:00.000Z",
+      "startTime": "11:00 AM",
+      "endTime": "11:30 AM",
+      "doctorId": 4,
+      "patientName": "test Averps",
+      "status": 0,
+      "createdAt": "2025-06-24T05:41:50.613Z",
+      "id": 13
+    },
+    {
+      "email": "pallab@gmail.com",
+      "phone": "7458961230",
+      "date": "2025-06-25T18:30:00.000Z",
+      "startTime": "12:00 AM",
+      "endTime": "12:30 AM",
+      "doctorId": 2,
+      "patientName": "test User",
+      "status": 0,
+      "createdAt": "2025-06-24T05:51:03.135Z",
+      "id": 14
+    },
+    {
+      "email": "aahad@gmail.com",
+      "phone": "7894546123",
+      "date": "2025-06-24T18:30:00.000Z",
+      "startTime": "10:00 AM",
+      "endTime": "10:30 AM",
+      "doctorId": 4,
+      "patientName": "test Averps",
+      "status": 0,
+      "createdAt": "2025-06-24T05:51:47.720Z",
+      "id": 15
+    }
+  ]
+}
