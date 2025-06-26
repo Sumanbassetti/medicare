@@ -3,10 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Button } from "../components/ui/button";
 import { Card } from "../components/ui/card";
 import { Appointment, Time } from "../types";
-import { minutesToTime, pad, parseTime, timeToMinutes } from "../utils/shared";
-
-type TimePart = "hour" | "minute" | "ampm";
-type Delta = number | string;
+import { getMinutes, isValidTime, MAX_TIME, minutesToTime, pad, parseTime } from "../utils/shared";
 
 interface TimePickerProps {
   selectedDate: string;
@@ -25,30 +22,51 @@ const TimePicker: React.FC<TimePickerProps> = ({
 }) => {
   const [localStartTime, setLocalStartTime] = useState<Time>({
     hour: 12,
-    minute: 0,
-    ampm: "AM",
-  });
-
-  const [localEndTime, setLocalEndTime] = useState<Time>({
-    hour: 12,
     minute: 30,
     ampm: "AM",
   });
 
-  const [isEndManuallyChanged, setIsEndManuallyChanged] = useState(false);
+  const [localEndTime, setLocalEndTime] = useState<Time>({
+    hour: 1,
+    minute: 0,
+    ampm: "AM",
+  });
+
+  const [endManuallyChanged, setEndManuallyChanged] = useState(false);
+
+  // When start time changes, auto-set end time 30 minutes later (if not manually updated)
+  useEffect(() => {
+    if (!endManuallyChanged) {
+      const newEndMins = Math.min(getMinutes(localStartTime) + 30, MAX_TIME);
+      const newEnd = minutesToTime(newEndMins);
+      setLocalEndTime(newEnd);
+    }
+
+    const format = (t: Time) => `${pad(t.hour)}:${pad(t.minute)} ${t.ampm}`;
+    setStartTime(format(localStartTime));
+  }, [localStartTime]);
+
+  useEffect(() => {
+    const format = (t: Time) => `${pad(t.hour)}:${pad(t.minute)} ${t.ampm}`;
+    setEndTime(format(localEndTime));
+  }, [localEndTime]);
+
+  useEffect(() => {
+    setIsBooked(isTimeRangeBooked(localStartTime, localEndTime, selectedDate));
+  }, [localStartTime, localEndTime, selectedDate, appointments]);
 
   const isTimeRangeBooked = (
     start: Time,
     end: Time,
     dateStr: string
   ): boolean => {
-    const startMins = timeToMinutes(start);
-    const endMins = timeToMinutes(end);
+    const startMins = getMinutes(start);
+    const endMins = getMinutes(end);
 
     return appointments.some((app) => {
       if (app.date !== dateStr) return false;
-      const appStart = timeToMinutes(parseTime(app.startTime));
-      const appEnd = timeToMinutes(parseTime(app.endTime));
+      const appStart = getMinutes(parseTime(app.startTime));
+      const appEnd = getMinutes(parseTime(app.endTime));
       return (
         (startMins >= appStart && startMins < appEnd) ||
         (endMins > appStart && endMins <= appEnd) ||
@@ -57,90 +75,90 @@ const TimePicker: React.FC<TimePickerProps> = ({
     });
   };
 
-  // Auto-update end time when start changes (unless manually changed)
-  useEffect(() => {
-    if (!isEndManuallyChanged) {
-      const newEnd = minutesToTime(timeToMinutes(localStartTime) + 30);
-      setLocalEndTime(newEnd);
-    }
-  }, [localStartTime, isEndManuallyChanged]);
-
-  // Send selected times to parent in string format
-  useEffect(() => {
-    const formatTime = (t: Time) => `${pad(t.hour)}:${pad(t.minute)} ${t.ampm}`;
-    setStartTime(formatTime(localStartTime));
-  }, [localStartTime]);
-
-  useEffect(() => {
-    const formatTime = (t: Time) => `${pad(t.hour)}:${pad(t.minute)} ${t.ampm}`;
-    setEndTime(formatTime(localEndTime));
-  }, [localEndTime]);
-
-  const blocked = isTimeRangeBooked(localStartTime, localEndTime, selectedDate);
-
-  useEffect(() => {
-    setIsBooked(blocked);
-  }, [blocked]);
-
   const updateTime = (
-    type: TimePart,
-    delta: Delta,
+    type: keyof Time,
+    delta: number,
     time: Time,
     setTime: React.Dispatch<React.SetStateAction<Time>>,
-    setManualChange?: () => void
+    isEndUpdate = false
   ) => {
-    setTime((prev) => {
-      let { hour, minute, ampm } = prev;
-      if (type === "hour")
-        hour = ((hour + (delta as number) - 1 + 12) % 12) + 1;
-      if (type === "minute") minute = (minute + (delta as number) + 60) % 60;
-      if (type === "ampm") ampm = ampm === "AM" ? "PM" : "AM";
-      return { hour, minute, ampm };
-    });
-    if (setManualChange) setManualChange();
+    const next = { ...time };
+
+    if (type === "hour") {
+      next.hour = ((next.hour + delta - 1 + 12) % 12) + 1;
+    } else if (type === "minute") {
+      next.minute = (next.minute + delta + 60) % 60;
+    } else if (type === "ampm") {
+      next.ampm = next.ampm === "AM" ? "PM" : "AM";
+    }
+
+    if (!isValidTime(next)) return;
+
+    if (isEndUpdate && getMinutes(next) <= getMinutes(localStartTime)) {
+      return; // prevent end time being less than or equal to start
+    }
+
+    setTime(next);
+    if (isEndUpdate) setEndManuallyChanged(true);
   };
 
-  const renderTimeCard = (time: Time, updateFn: any, isDisabled: boolean) => (
-    <Card
-      className={`w-64 h-[130px] flex flex-row justify-between items-center gap-2 p-4 rounded-xl shadow-sm border transition-all ${
-        isDisabled ? "text-gray-400 line-through" : ""
-      }`}
-    >
-      {(["hour", "minute", "ampm"] as const).map((part) => (
-        <div className="flex flex-col items-center" key={part}>
-          <Button variant="ghost" size="icon" onClick={() => updateFn(part, 1)}>
-            <ChevronUp className="w-4 h-4" />
-          </Button>
-          <div className="text-lg font-medium">
-            {part === "ampm" ? time.ampm : pad(time[part])}
+  const renderTimeCard = (
+    time: Time,
+    updateFn: (type: keyof Time, delta: number) => void
+  ) => (
+    <Card className="w-64 h-[130px] flex flex-row justify-between items-center gap-2 p-4 rounded-xl shadow-sm border transition-all">
+      {(["hour", "minute", "ampm"] as const).map((part) => {
+        const getNextSimulated = (delta: number): Time => {
+          const simulated = { ...time };
+          if (part === "hour")
+            simulated.hour = ((time.hour + delta - 1 + 12) % 12) + 1;
+          if (part === "minute")
+            simulated.minute = (time.minute + delta + 60) % 60;
+          if (part === "ampm")
+            simulated.ampm = time.ampm === "AM" ? "PM" : "AM";
+          return simulated;
+        };
+
+        const nextUp = getNextSimulated(1);
+        const nextDown = getNextSimulated(-1);
+
+        return (
+          <div className="flex flex-col items-center" key={part}>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => updateFn(part, 1)}
+              disabled={!isValidTime(nextUp)}
+            >
+              <ChevronUp className="w-4 h-4" />
+            </Button>
+            <div className="text-lg font-medium">
+              {part === "ampm" ? time.ampm : pad(time[part])}
+            </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => updateFn(part, -1)}
+              disabled={!isValidTime(nextDown)}
+              className={!isValidTime(nextDown) ? "opacity-40 cursor-not-allowed" : ""}
+            >
+              <ChevronDown
+                className={`w-4 h-4 ${!isValidTime(nextDown) ? "text-gray-400" : ""}`}
+              />
+            </Button>
           </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => updateFn(part, -1)}
-          >
-            <ChevronDown className="w-4 h-4" />
-          </Button>
-        </div>
-      ))}
+        );
+      })}
     </Card>
   );
 
   return (
     <div className="flex gap-4">
-      {renderTimeCard(
-        localStartTime,
-        (type: TimePart, delta: Delta) =>
-          updateTime(type, delta, localStartTime, setLocalStartTime),
-        blocked
+      {renderTimeCard(localStartTime, (type, delta) =>
+        updateTime(type, delta, localStartTime, setLocalStartTime)
       )}
-      {renderTimeCard(
-        localEndTime,
-        (type: TimePart, delta: Delta) =>
-          updateTime(type, delta, localEndTime, setLocalEndTime, () =>
-            setIsEndManuallyChanged(true)
-          ),
-        blocked
+      {renderTimeCard(localEndTime, (type, delta) =>
+        updateTime(type, delta, localEndTime, setLocalEndTime, true)
       )}
     </div>
   );

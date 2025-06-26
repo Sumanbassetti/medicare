@@ -15,7 +15,7 @@
       "specialty": "Dermatologist",
       "image": "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=300&h=300&fit=crop&crop=face",
       "experience": "12 years",
-      "rating": 4.9,
+      "rating": 5,
       "consultationFee": 120
     },
     {
@@ -217,6 +217,18 @@
       "status": 0,
       "createdAt": "2025-06-24T05:51:47.720Z",
       "id": 15
+    },
+    {
+      "email": "sumankumarghosh70@gmail.com",
+      "phone": "8617624713",
+      "date": "2025-06-26T18:30:00.000Z",
+      "startTime": "12:00 AM",
+      "endTime": "12:30 AM",
+      "doctorId": 2,
+      "patientName": "Khudrun ghosh",
+      "status": 0,
+      "createdAt": "2025-06-26T08:24:28.810Z",
+      "id": 16
     }
   ]
 }
